@@ -2,3 +2,4 @@
 .Rhistory
 @trash/
 *.RData
+.Rproj.user/

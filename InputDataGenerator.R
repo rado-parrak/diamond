@@ -74,8 +74,14 @@ save(inputData, file = "dataQualityInputData.RData")
 key <- mutate(inputData, isDataError = ifelse(grepl("e",ID), 1, 0))
 save(key, file = "dataQualityKey.RData")
 
+solutions <- rbind(errorsMulti, errorsUniv)
+solutions$currentOutstanding <- abs(solutions$currentOutstanding)
+solutions$discountRate <- abs(solutions$discountRate)
+solutions$maturity <- abs(solutions$maturity)
+solutions$marketValuation <- abs(solutions$marketValuation)
 
-
+solutions$marketValuation[1:5] <- solutions$currentOutstanding[1:5] 
+save(solutions, file = "dataQualitySolutions.RData")
 
 # Visualisation
 # i) univariate

@@ -1,6 +1,6 @@
 # CREDO DIAMOND "CLASS"
 
-credoDiamond.suggest <- function(inputData, rules, feedback){
+credoDiamond.suggest <- function(inputData, rules, feedback, settings){
   
   suggestionContainer <- NULL
   suggestions         <- NULL
@@ -25,9 +25,41 @@ credoDiamond.suggest <- function(inputData, rules, feedback){
   # --------------------------------------------------------
   # ---                   2) ML-based                    ---
   # --------------------------------------------------------
-  if(nrow(filter(suggestionContainer, type == "TYPE 1")) == 0){
+  if(!is.null(suggestionContainer)){
+    if(nrow(filter(suggestionContainer, type == "TYPE 1")) == 0){
+      
+    }    
+  }
+
+  # --------------------------------------------------------
+  # ---           3) Order and return                    ---
+  # --------------------------------------------------------
+  if(!is.null(suggestionContainer)){
+    suggestionContainer <- suggestionContainer %>% 
+      dplyr::arrange(desc(prob)) %>% 
+      dplyr::filter(!(ID %in% archive$feedbacks$ID))
+    suggestionContainer <- suggestionContainer[1:settings$nSugestions,]
+  }
+  return(suggestionContainer)
+}
+
+credoDiamond.archive <- function(round, feedback, precision){
+  
+  if(is.null(archive)){
+    archive[["feedbacks"]] <- data.frame()
+    archive[["precisionHistory"]] <- data.frame(round = 0
+                                                , precision = 0
+                                                , hits = 0
+                                                , hitRate = 0)
     
   }
   
-  return(suggestionContainer)
-} 
+  aux <- feedback %>% dplyr::mutate(round = round)
+  
+  archive$feedbacks <<- rbind(archive$feedbacks, aux)
+  archive$precisionHistory <<- rbind(archive$precisionHistory, data.frame(round = round
+                                                                          , precision = precision
+                                                                          , hits = (archive$precisionHistory$hits[length(archive$precisionHistory$hits)] + nrow(dplyr::filter(feedback, isDataError == 1))) 
+                                                                          , hitRate = nrow(dplyr::filter(feedback, isDataError == 1)) / nrow(feedback) ))
+  
+}
