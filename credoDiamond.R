@@ -28,6 +28,13 @@ credoDiamond.suggest <- function(inputData, rules, feedback, settings){
   if(!is.null(suggestionContainer)){
     if(nrow(filter(suggestionContainer, type == "TYPE 1")) == 0){
       
+      dataWithClusters    <- credoDiamond.cluster(inputData)
+      nSuggestedClusters  <- length(unique(dataWithClusters$clusters))
+      if(nSuggestedClusters > 2){
+        # select a representative from the smallest "N" clusters
+        
+      }
+      
     }    
   }
 
@@ -61,5 +68,11 @@ credoDiamond.archive <- function(round, feedback, precision){
                                                                           , precision = precision
                                                                           , hits = (archive$precisionHistory$hits[length(archive$precisionHistory$hits)] + nrow(dplyr::filter(feedback, isDataError == 1))) 
                                                                           , hitRate = nrow(dplyr::filter(feedback, isDataError == 1)) / nrow(feedback) ))
+  
+}
+
+credoDiamond.clusters <- function(inputData, nClusters){
+  
+  
   
 }
