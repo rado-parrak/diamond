@@ -32,11 +32,7 @@ suggestSupervised   <<- FALSE
 stopSuggesting      <<- FALSE
 suggestionContainer <<- data.frame()
 
-# -------------
-
-feedback          <- NULL
-precisionHistory  <- NULL
-averageHitRate    <- 1
+# --------- MAIN WHILE-LOOP --------- 
 rround            <- 0
   
 while(!stopSuggesting){
@@ -44,17 +40,13 @@ while(!stopSuggesting){
   print(paste0(" ---- ROUND : ", rround, " -----"))
   
   # 1) CREDO DIAMOND: Suggest
-  suggestions <- credoDiamond.suggest(inputData, uniRules, feedback, settings, rround)
+  suggestions <- credoDiamond.suggest(inputData, uniRules, settings, rround)
 
   # 2) HUMAN: Check & Feedback
-  #feedback    <- human.check(suggestions, key)
-  #precision   <- human.evaluate(feedback)
+  human.check(suggestions, key, rround)
+  print(paste0("Precision at step ", as.character(rround), " was: ", as.character(human.evaluate(rround),".")))
   
-  # 3) CREDO DIAMOND: Archive & Learn
-  #credoDiamond.archive(rround, feedback, precision)
-  #averageHitRate <- mean(archive$precisionHistory$hitRate[2:(rround+1)])
-  
-  # 4) HUMAN: Correct
+  # 3) HUMAN: Correct
   #inputData   <- human.correct(inputData, feedback, solutions)   
 }
 

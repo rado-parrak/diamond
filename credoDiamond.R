@@ -42,14 +42,11 @@ generateSuggestions <- function(inputData, rules,step, type){
   return(suggestions)
 }
 
-credoDiamond.suggest <- function(inputData, rules, feedback, settings, step){
+credoDiamond.suggest <- function(inputData, rules, settings, step){
   # Login
   toLog(where = as.character(match.call()[[1]]), what = paste0('Entering function at step: ', step))
   suggestions <- NULL
   
-  if(!is.null(feedback)){
-    
-  }
   if(suggestRuleBased){
     toLog(where = 'suggestRuleBased', what = paste0('Step: ', step))
     suggestions <- generateSuggestions(inputData, rules, step, type = "RuleBased")
@@ -80,25 +77,5 @@ credoDiamond.suggest <- function(inputData, rules, feedback, settings, step){
   return(suggestions)
 }
 
-credoDiamond.archive <- function(round, feedback, precision){
-  
-  if(is.null(archive)){
-    archive[["feedbacks"]] <- data.frame()
-    archive[["precisionHistory"]] <- data.frame(round = 0
-                                                , precision = 0
-                                                , hits = 0
-                                                , hitRate = 0)
-    
-  }
-  
-  aux <- feedback %>% dplyr::mutate(round = round)
-  
-  archive$feedbacks <<- rbind(archive$feedbacks, aux)
-  archive$precisionHistory <<- rbind(archive$precisionHistory, data.frame(round = round
-                                                                          , precision = precision
-                                                                          , hits = (archive$precisionHistory$hits[length(archive$precisionHistory$hits)] + nrow(dplyr::filter(feedback, isDataError == 1))) 
-                                                                          , hitRate = nrow(dplyr::filter(feedback, isDataError == 1)) / nrow(feedback) ))
-  
-}
 
 
