@@ -47,7 +47,7 @@ while(!stopSuggesting){
   print(paste0("Precision at step ", as.character(rround), " was: ", as.character(human.evaluate(rround),".")))
   
   # 3) HUMAN: Correct
-  #inputData   <- human.correct(inputData, feedback, solutions)   
+  inputData <- human.correct(inputData, solutions, suggestions, rround)   
 }
 
 
