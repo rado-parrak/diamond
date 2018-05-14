@@ -21,10 +21,13 @@ uniRules <- rbind(uniRules, data.frame(name = "discountRate", min = 0,  max = 1,
 uniRules <- rbind(uniRules, data.frame(name = "maturity", min = 0,  max = 360, type = "| out-of-bounds"))
 
 settings <- list()
-settings["nSugestions"] <- 1
+settings["nSugestions"]     <- 1
+settings["eps"]             <- 0.000001
+settings["clustEps"]        <- 0.025
+settings["clustMinPoints"]  <- 3
+settings["nTry"]            <- 10 # number of trials for 'seed clustering'
 
 # Global vars: (dirty but R...)
-archive             <<- NULL #global var!
 logg                <<- data.frame() #global var
 suggestRuleBased    <<- TRUE
 suggestUnsupervised <<- FALSE
@@ -34,20 +37,18 @@ suggestionContainer <<- data.frame()
 
 # --------- MAIN WHILE-LOOP --------- 
 rround            <- 0
-  
+
 while(!stopSuggesting){
   rround <- rround + 1
   print(paste0(" ---- ROUND : ", rround, " -----"))
   
   # 1) CREDO DIAMOND: Suggest
-  suggestions <- credoDiamond.suggest(inputData, uniRules, settings, rround)
-
+  credoDiamond.suggest(inputData, uniRules, settings, rround)
   # 2) HUMAN: Check & Feedback
-  human.check(suggestions, key, rround)
+  human.check(key, rround)
   print(paste0("Precision at step ", as.character(rround), " was: ", as.character(human.evaluate(rround),".")))
-  
-  # 3) HUMAN: Correct
-  inputData <- human.correct(inputData, solutions, suggestions, rround)   
+  # 3) HUMAN: Corrects
+  inputData <- human.correct(inputData, solutions, rround)
 }
 
 
