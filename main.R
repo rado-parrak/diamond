@@ -23,9 +23,10 @@ uniRules <- rbind(uniRules, data.frame(name = "maturity", min = 0,  max = 360, t
 settings <- list()
 settings["nSugestions"]     <- 1
 settings["eps"]             <- 0.000001
-settings["clustEps"]        <- 0.025
+settings["clustMinEps"]     <- 0.1
+settings["clustMaxEps"]     <- 0.3
 settings["clustMinPoints"]  <- 3
-settings["nTry"]            <- 10 # number of trials for 'seed clustering'
+settings["gridSize"]        <- 5 # number of trials for 'seed clustering'
 
 # Global vars: (dirty but R...)
 logg                <<- data.frame() #global var
